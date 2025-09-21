@@ -1,0 +1,30 @@
+<index.html>
+<!doctype html>
+<html>
+  <head>
+    <title>QR Decryption</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 40px; }
+      form { margin-bottom: 20px; }
+      input[type=text] { padding: 6px; margin-right: 8px; }
+      input[type=submit] { padding: 6px 12px; }
+      h2 { color: #333; }
+      .result { margin-top: 20px; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <h2>QR Decryption Portal</h2>
+    <form method="POST">
+      <p>Ciphertext: <b>{{ cipher }}</b></p>
+      <label for="key">Enter Key:</label>
+      <input type="text" name="key" required>
+      <input type="submit" value="Decrypt">
+    </form>
+    {% if plaintext %}
+      <div class="result">
+        <h3>Decrypted Plaintext:</h3>
+        <p>{{ plaintext }}</p>
+      </div>
+    {% endif %}
+  </body>
+</html>
