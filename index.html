@@ -1,30 +1,57 @@
-<index.html>
-<!doctype html>
-<html>
-  <head>
-    <title>QR Decryption</title>
-    <style>
-      body { font-family: Arial, sans-serif; margin: 40px; }
-      form { margin-bottom: 20px; }
-      input[type=text] { padding: 6px; margin-right: 8px; }
-      input[type=submit] { padding: 6px 12px; }
-      h2 { color: #333; }
-      .result { margin-top: 20px; font-weight: bold; }
-    </style>
-  </head>
-  <body>
-    <h2>QR Decryption Portal</h2>
-    <form method="POST">
-      <p>Ciphertext: <b>{{ cipher }}</b></p>
-      <label for="key">Enter Key:</label>
-      <input type="text" name="key" required>
-      <input type="submit" value="Decrypt">
-    </form>
-    {% if plaintext %}
-      <div class="result">
-        <h3>Decrypted Plaintext:</h3>
-        <p>{{ plaintext }}</p>
-      </div>
-    {% endif %}
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Columnar Cipher Decryptor</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
+    input, button { margin: 10px; padding: 10px; font-size: 16px; }
+    #result { margin-top: 20px; font-weight: bold; color: green; }
+  </style>
+</head>
+<body>
+  <h1></h1>Columnar Cipher Decryptor</h1>
+  <p>Enter the key for encryption:</p>
+  
+  <input type="text" id="key" placeholder="Enter Key">
+  <button onclick="decrypt()">Decrypt</button>
+  
+  <div id="result"></div>
+
+  <script>
+    // Read cipher from query param
+    const urlParams = new URLSearchParams(window.location.search);
+    const cipher = urlParams.get('cipher');
+
+    function columnarDecrypt(cipher, key) {
+      if (!cipher || !key) return "Missing cipher or key!";
+      
+      const rows = Math.floor(cipher.length / key.length);
+      let m = {};
+      let start = 0;
+
+      [...key].sort().forEach(k => {
+        m[k] = cipher.slice(start, start + rows).split('');
+        start += rows;
+      });
+
+      let ordered = [...key].map(k => m[k]);
+      let plaintext = '';
+
+      for (let i = 0; i < rows; i++) {
+        for (let col of ordered) {
+          plaintext += col[i];
+        }
+      }
+      return plaintext.trim();
+    }
+
+    function decrypt() {
+      const key = document.getElementById("key").value;
+      const result = columnarDecrypt(cipher, key);
+      document.getElementById("result").innerText = "Plaintext: " + result;
+    }
+  </script>
+</body>
 </html>
+
